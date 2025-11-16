@@ -1,5 +1,5 @@
 import { PLAYER_STATE } from './player-state.js';
-import { updateAction, startChoppingCycle } from './player-actions.js';
+import { updateAction, startChoppingCycle, setChopTarget } from './player-actions.js';
 import { renderPlayer } from './player-renderer.js';
 
 export const ENERGY_DURATION_MS = 3600 * 1000; // 1 hour (3600 seconds)
@@ -168,6 +168,10 @@ export class Player {
                 console.warn(`[${this.username}] Invalid target for state ${this.state}. Tree at (${this.actionTarget?.x}, ${this.actionTarget?.y}) not found. Resetting to IDLE.`);
                 this.state = PLAYER_STATE.IDLE;
                 this.actionTarget = null;
+            } else if (this.state === PLAYER_STATE.MOVING_TO_TREE) {
+                // If the player was moving to a tree, their movement target needs to be re-established.
+                console.log(`[${this.username}] Re-initializing move target for state ${this.state}.`);
+                setChopTarget(this, gameMap, this.actionTarget);
             }
         }
     }
