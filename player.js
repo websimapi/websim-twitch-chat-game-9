@@ -160,6 +160,18 @@ export class Player {
         }
     }
 
+    // New method to validate state after map is loaded
+    validateState(gameMap) {
+        const needsTree = [PLAYER_STATE.MOVING_TO_TREE, PLAYER_STATE.CHOPPING];
+        if (needsTree.includes(this.state)) {
+            if (!this.actionTarget || gameMap.grid[this.actionTarget.y][this.actionTarget.x] !== 1) { // 1 is TILE_TYPE.TREE
+                console.warn(`[${this.username}] Invalid target for state ${this.state}. Tree at (${this.actionTarget?.x}, ${this.actionTarget?.y}) not found. Resetting to IDLE.`);
+                this.state = PLAYER_STATE.IDLE;
+                this.actionTarget = null;
+            }
+        }
+    }
+
     update(deltaTime, gameMap) {
         
         if (this.isPowered()) {

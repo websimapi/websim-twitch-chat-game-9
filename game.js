@@ -112,6 +112,11 @@ export class Game {
                 }
                 console.log(`[Persistence] Loaded ${this.players.size} player states from localStorage for channel ${this.channel}.`);
                 
+                // After loading all players and the map, validate their states
+                for (const player of this.players.values()) {
+                    player.validateState(this.map);
+                }
+
                 // Log data for active players as requested
                 console.log("--- Active Player Data on Load ---");
                 for (const player of this.players.values()) {
